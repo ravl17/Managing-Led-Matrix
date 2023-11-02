@@ -1,0 +1,15 @@
+input {
+    border: 0;
+    background: none;
+    /* width: 20px; */
+    /* height: 20px; */
+    padding: 0;
+}
+
+button {
+    border: 0;
+    padding:5px;
+    width: 20px;
+    height: 20px;
+
+}
