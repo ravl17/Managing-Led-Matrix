@@ -36,20 +36,21 @@ function crearPixel(tableX, tableY) {
         tab.appendChild(trtr);
     }
 }
+function botonPulsado() {
+    pulsado = true;
+}
 
+function botonSoltado() {
+    pulsado = false;
+}
 function sendData(tableX, tableY) {
     const bitmap = createBitmap(tableX, tableY);
-    const bitmap565 = rgbToUint16Array(bitmap);
-    // console.log(rgbToUint16Array(bitmap));
-    // enviarDato(bitmap565);
     fetch('/submit-data', {
         method: 'POST',
         headers: {
-            // 'Content-Type': 'application/json',
             'Content-Type': 'application/octet-stream',
         },
-        // body: JSON.stringify({ data: Array.from(array) }),
-        body: bitmap565.buffer,
+        body: bitmap.buffer,
     })
         .then(response => response.json())
         .then(data => {
@@ -64,16 +65,17 @@ function createBitmap(tableX, tableY) {
         for (let j = 0; j < tableX; j++) {
             const cell = document.getElementById("buttonLedColor" + j + "_" + i);
             const color = cell.style.backgroundColor;
-            const rgbValues = rgbToRgb565(color);
-            // Store the RGB values in the bitmap
-            // bitmap[i][j] = rgbValues;
-            // Store the color in the bitmap
-            bitmap.push(rgbValues);
+            const rgb565 = rgbToRgb565(color);
+            bitmap.push(rgb565);
         }
     }
-    // console.log(bitmap);
+    const uint16Array = new Uint16Array(bitmap.length);
+    for (let i = 0; i < bitmap.length; i++) {
+        const color = bitmap[i];
+        uint16Array[i] = rgb565ToUint16(color);
+    }
 
-    return bitmap;
+    return uint16Array;
 }
 function rgbToRgb565(color) {
     rgb = color.replace(/[^\d,]/g, '').split(',');
@@ -88,56 +90,19 @@ function rgbToRgb565(color) {
         blue = Math.round(blue / 255 * 31);
 
         const rgb565Value = (red << 11) | (green << 5) | (blue);
-        // console.log(rgb565Value);
         const rgb565Hex = rgb565Value.toString(16).toUpperCase();
         return "0x" + rgb565Hex;
     } else {
         return "0x0";
     }
 }
-function botonPulsado() {
-    pulsado = true;
-}
-
-function botonSoltado() {
-    pulsado = false;
-}
 
 
-// function createBitmapBinaryData(tableX, tableY) {
-//     // Convert the bitmap to binary data and return it as an array of bytes.
-//     const bitmap = createBitmap(tableX, tableY);
-//     // console.log(rgbToUint16Array(bitmap));
-//     enviarDato(rgbToUint16Array(bitmap));
-//     // enviarDato(bitmap);
-//     const binaryData = new Uint8Array(tableX * tableY*2); // Assuming 16-bit RGB565 format
 
-//     for (let i = 0; i < tableY; i++) {
-//         for (let j = 0; j < tableX; j++) {
-//             const index = (i * tableX + j) * 2;
-//             const rgb565Value = bitmap[i * tableX + j];
-//             binaryData[index] = (rgb565Value >> 8) & 0xFF;
-//             binaryData[index + 1] = rgb565Value & 0xFF;
-//         }
-//     }
-//     // console.log(binaryData);
 
-//     return binaryData;
-// }
 
-function rgbToUint16Array(colors) {
-    console.log(colors);
-    const uint16Array = new Uint16Array(colors.length);
 
-    for (let i = 0; i < colors.length; i++) {
-        const color = colors[i];
-        uint16Array[i] = hexStringToBinary(color);
-    }
-
-    return uint16Array;
-}
-
-function hexStringToBinary(hexString) {
+function rgb565ToUint16(hexString) {
     try {
         // Remove the '0x' prefix if it exists
         if (hexString.startsWith("0x")) {
