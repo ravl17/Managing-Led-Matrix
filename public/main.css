@@ -1,15 +1,16 @@
 input {
     border: 0;
     background: none;
-    /* width: 20px; */
-    /* height: 20px; */
     padding: 0;
 }
 
-button {
+.button_led{
     border: 0;
-    padding:5px;
+    padding:0px;
     width: 20px;
     height: 20px;
-
+}
+body{
+    display: grid;
+    place-content: center;
 }

@@ -7,12 +7,17 @@
 </head>
 
 <body>
-    <button onclick="crearPixel(32,8)"></button>
+    <label for="matrixWidth">Matrix Width (Number of leds)</label>
+    <input type="number" id="matrixWidth" name="matrixWidth" min="1" value="32"> 
+    <label for="matrixHeight">Matrix Height (Number of leds)</label>
+    <input type="number" id="matrixHeight" name="matrixHeight" min="1" value="8"> 
+    <!-- <button onclick="crearPixel(32,8)">Crear Matriz</button> -->
+    <button onclick="crearPixel()">Crear Matriz</button>
     <!-- <button onclick="crearPixel(4,4)"></button> -->
-    <div id="matrizPixel"></div>
-    <table id="tabl"></table>
+    <table id="matrixLed"></table>
     <input id="colorSeleccionado" type="color"/>
-    <button onclick="sendData(32,8)"></button>
+    <button onclick="fillMatrix()">aaa</button>
+    <button onclick="sendData()">Send Matrix</button>
 </body>
 
 
